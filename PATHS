@@ -1,0 +1,7 @@
+COMPILER = g++ -std=c++11
+
+INC_DIR = ~/include
+LIB_DIR = ~/lib
+
+TIME = /usr/bin/time 
+GUO_MAIN = ~/string-net-frequency/build/main

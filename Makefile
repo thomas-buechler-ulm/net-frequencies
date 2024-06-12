@@ -5,7 +5,7 @@ include PATHS
 OUR_MAIN = ./nf.x
 $(OUR_MAIN): src
 	  $(COMPILER) -I $(INC_DIR) -L $(LIB_DIR) \
-	  src/main.cpp -o $(OUR_MAIN)  -ldivsufsort -ldivsufsort64
+	  src/main.cpp -o $(OUR_MAIN)  -ldivsufsort -ldivsufsort64 -O3 -DNDEBUG -march=native
 
 ###############################################
 tiny: $(OUR_MAIN)

@@ -8,7 +8,7 @@ This program that calculates string net-frequencies.
 # Installation
 Clone this repository.
 ```
-git clone https://github.com/thomas-buechler-ulm/net-frequencies
+git clone https://github.com/thomas-buechler-ulm/net-frequencies.git
 cd net-frequencies
 ```
 Eventually edit the file **PATHS** to set the correct paths to the **lib** and **include** directories that contain libdivsufsort and the **compiler**.

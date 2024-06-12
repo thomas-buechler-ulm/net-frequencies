@@ -4,6 +4,9 @@ This program that calculates string net-frequencies.
 # Requirements
 - C++ compiler
 - Installation of libdivsufsort, see: https://github.com/y-256/libdivsufsort
+  
+Note that you also need to install the 64-bit version of libdivsufsort. For this, pass `-DBUILD_DIVSUFSORT64=ON` to cmake when installing libdivsufsort.
+
 
 # Installation
 Clone this repository.

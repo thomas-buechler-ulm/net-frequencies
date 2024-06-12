@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 	cerr << "Time for generating bwt " << t.stop_and_get() << endl; t.reset_and_start();
 
 	nf::run(lcp, bwt, sa);
-	cerr << "Time for alg3           " << t.stop_and_get() << endl; t.reset_and_start();
+	cerr << "Time for net-freqs      " << t.stop_and_get() << endl; t.reset_and_start();
 
 	return 0;
 }

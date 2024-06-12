@@ -4,4 +4,5 @@ INC_DIR = ~/include
 LIB_DIR = ~/lib
 
 TIME = /usr/bin/time 
-GUO_MAIN = ~/string-net-frequency/build/main
+GUO_MAIN = /usr/bin/echo
+#GUO_MAIN = ~/string-net-frequency/build/main

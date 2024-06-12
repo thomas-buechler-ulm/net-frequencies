@@ -1,67 +1,73 @@
 #include <stack>
-
 using namespace std;
 
 namespace nf{
 bool REPORT_ALL = false;
 
-const size_t UNDEF = -1;
-
-struct lcp_iv{
-	int64_t lcp;
-	size_t lb;
-	vector<size_t> list;//NEW
-	lcp_iv(int64_t lcp, size_t lb) : lcp(lcp), lb(lb) { }
+template <typename lcp_t, typename ix_t>
+struct lcp_iv_t{
+	lcp_t lcp;
+	ix_t lb;
+	ix_t list_start;
+	lcp_iv_t(lcp_t lcp, ix_t lb, ix_t ls) : lcp(lcp), lb(lb), list_start(ls) { }
 };
 
-void run(const vector<int32_t>& lcp, const vector<uint8_t>& bwt, vector<uint32_t> & sa){
-	if(REPORT_ALL)	cout << "pos" << '\t' << "len" << endl;
-	else			cout << "pos" << '\t' << "len" << '\t' << "freq" << endl;
-	vector<size_t> penultimate	(257, UNDEF);
-	vector<size_t> last			(257, UNDEF);
-	last[bwt.front()] = 0;
-	stack<lcp_iv,vector<lcp_iv>> stack;
-	stack.push(lcp_iv(-1, 0));
+template <typename lcp_t = int32_t, typename ix_t = uint32_t>
+void run(const vector<lcp_t>& lcp, const vector<uint8_t>& bwt, vector<ix_t> & sa){
+	constexpr ix_t UNDEF = std::numeric_limits<ix_t>::max();
 
-	for(size_t k = 1; k < lcp.size(); k++){
+	if(REPORT_ALL)			cout << "pos" << '\t' << "len" << endl;
+	else				cout << "pos" << '\t' << "len" << '\t' << "freq" << endl;
+	vector<ix_t> penultimate	(257, UNDEF);
+	vector<ix_t> last		(257, UNDEF);
+	vector<ix_t> list;
+	last[bwt.front()] 		= 0;
+	using lcp_iv 			= lcp_iv_t<lcp_t, ix_t>;
+	stack<lcp_iv, vector<lcp_iv>> 	stack;
+	stack				.emplace(-1, 0, list.size());
 
-		bool dealt_with = false;
+	for(ix_t k = 1; k < lcp.size(); k++){
+		//SET LAST AND PENULTIMATE
+		{
+			uint8_t c 	= bwt[k - 1];
+			penultimate[c] 	= last[c];
+			last[c] 	= k - 1;
+		}
+
+		bool dealt_with 	= false;
 		if( lcp[k] <= stack.top().lcp ){
-			stack.top().list.push_back(k-1);
-			dealt_with = true;
+			list		.emplace_back(k - 1); // stack.top().list.push_back(k-1);
+			dealt_with 	= true;
 		}
 
 		//POP INTERVALS
-		size_t lb = k-1;
+		ix_t lb 		= k-1;
 		while(lcp[k] < stack.top().lcp){
-			lcp_iv cur 	= stack.top(); stack.pop();
-			lb = cur.lb;
+			const lcp_iv& cur 	= stack.top();
+			lb 			= cur.lb;
 
 			if( cur.lcp > 0){ //COMPUTE NET FREQUENCY
 				size_t nf 	= 0;
-				for(auto i : cur.list){
+// 				for(auto i : cur.list){
+				for (size_t j = cur.list_start; j < list.size(); j++) {
+					const auto i = list[j];
 					auto c 	= bwt[i];
 					if( i == last[c] && (penultimate[c] < lb || penultimate[c]==UNDEF )   ){
 						if(REPORT_ALL)	cout << sa[i] <<'\t' << cur.lcp << '\n';
-						else			nf++;
+						else		nf++;
 					}
 				}
-				if(!REPORT_ALL && nf)	cout << sa[lb] << '\t'<< cur.lcp << '\t'<< nf << '\n';
+				if(!REPORT_ALL && nf)		cout << sa[lb] << '\t'<< cur.lcp << '\t'<< nf << '\n';
 			}
+			list.resize(cur.list_start);
+			stack.pop();
 		}
 
 		//PUSH INTERVAL
 		if(lcp[k] > stack.top().lcp){
-			stack.push(lcp_iv(lcp[k], lb));
+			stack.emplace(lcp[k], lb, list.size());
 			if(!dealt_with)
-				stack.top().list.push_back(k-1);
-		}
-
-		//SET LAST AND PENULTIMATE
-		if(k < bwt.size()){ // IN LAST ITERATION BWT[k] IS UNDEFINED, AS |BWT| = |LCP|-1
-			uint8_t c 		= bwt[k];
-			penultimate[c] 	= last[c];
-			last[c] 			= k;
+				list.emplace_back(k - 1); // stack.top().list.push_back(k-1);
 		}
 	}
 }

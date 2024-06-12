@@ -48,8 +48,9 @@ vector<uint8_t> generate_bwt(vector<uint8_t> & text, vector<uint32_t> & sa){
 	return bwt;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
+	std::ios::sync_with_stdio(false); // faster cout!
+	
 	// Check Parameters
 	if(argc < 2){
 		cerr << "Programm calculates all net-frequencies." << endl;

@@ -43,7 +43,7 @@ The program writes running times to **stdcerr** and the output to **stdout**. If
 Follow the installation instructions of https://github.com/Peakergzf/string-net-frequency/
 (We used commit [545b8e5](https://github.com/Peakergzf/string-net-frequency/commit/545b8e59305c174ca5ba05cca9c3591715a5f2e7))
 
-Replace the files, with ours (see /src-Peakergzf): 
+Replace the following three files, with the ones stored in this repository: net-frequencies/src-Peakergzf): 
 - main.cpp (We wrote this, to be able to call Algorithm 2 and Algorithm 3 of the publication)
 - experiments.hpp (Only visibility of methods were changed to 'public' )
 - suffix_arrays.cpp (We added lines for outputting the nf-values)

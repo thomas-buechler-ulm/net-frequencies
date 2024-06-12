@@ -50,19 +50,26 @@ Replace the files, with ours (see /src-Peakergzf):
 
 After replacing the files, rerun **cmake --build .** 
 
+Edit the file **net-frequencies/PATHS** and set the correct path to the **main.bin** of Peakergzf/string-net-frequency (from Guo et al. https://arxiv.org/html/2404.12701v1)
+
+
 ### Download test data:
 ```
 make get_data
 ```
 ### Run experiments:
-Eventually edit the file **PATHS** to set the correct paths to the **time** and the **main.bin** of ... 
+Eventually edit the file **PATHS** to set the correct paths to the **time** command.
 
 To run the comparison of the output use:
 ```
 make run_compare_dna_nf
 ```
+The outputs will be stored in directory ./out
+The **diff** command should output nothing, as the outputs of both programs are euqal. 
+
+
 To run the time and space measurement use:
 ```
 make run
 ```
-
+The output of the net-frequencies will be redirected the dev/null. Time and space measurements will be written in directory ./out.

@@ -21,7 +21,6 @@ void run(const vector<lcp_t>& lcp, const vector<uint8_t>& bwt, vector<ix_t> & sa
 	vector<ix_t> penultimate	(257, UNDEF);
 	vector<ix_t> last		(257, UNDEF);
 	vector<ix_t> list;
-	last[bwt.front()] 		= 0;
 	using lcp_iv 			= lcp_iv_t<lcp_t, ix_t>;
 	stack<lcp_iv, vector<lcp_iv>> 	stack;
 	stack				.emplace(-1, 0, list.size());

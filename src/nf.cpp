@@ -1,4 +1,8 @@
+#include <cstdint>
+#include <iostream>
 #include <stack>
+#include <vector>
+
 using namespace std;
 
 namespace nf{
@@ -12,8 +16,8 @@ struct lcp_iv_t{
 	lcp_iv_t(lcp_t lcp, ix_t lb, ix_t ls) : lcp(lcp), lb(lb), list_start(ls) { }
 };
 
-template <typename lcp_t = int32_t, typename ix_t = uint32_t>
-void run(const vector<lcp_t>& lcp, const vector<uint8_t>& bwt, vector<ix_t> & sa){
+template <bool REPORT_ALL, typename lcp_t = int32_t, typename ix_t = uint32_t>
+void _run(const vector<lcp_t>& lcp, const vector<uint8_t>& bwt, vector<ix_t> & sa){
 	constexpr ix_t UNDEF = std::numeric_limits<ix_t>::max();
 
 	if(REPORT_ALL)			cout << "pos" << '\t' << "len" << endl;
@@ -33,30 +37,28 @@ void run(const vector<lcp_t>& lcp, const vector<uint8_t>& bwt, vector<ix_t> & sa
 			last[c] 	= k - 1;
 		}
 
-		bool dealt_with 	= false;
-		if( lcp[k] <= stack.top().lcp ){
-			list		.emplace_back(k - 1); // stack.top().list.push_back(k-1);
-			dealt_with 	= true;
+		list.emplace_back(k - 1);
+		if (lcp[k] == stack.top().lcp) {
+			continue;
 		}
-
+		ix_t lb = k-1;
+		const bool dealt_with = lcp[k] < stack.top().lcp;
 		//POP INTERVALS
-		ix_t lb 		= k-1;
 		while(lcp[k] < stack.top().lcp){
-			const lcp_iv& cur 	= stack.top();
-			lb 			= cur.lb;
+			const lcp_iv& cur = stack.top();
+			lb = cur.lb;
 
 			if( cur.lcp > 0){ //COMPUTE NET FREQUENCY
-				size_t nf 	= 0;
-// 				for(auto i : cur.list){
+				size_t nf = 0;
 				for (size_t j = cur.list_start; j < list.size(); j++) {
 					const auto i = list[j];
-					auto c 	= bwt[i];
+					auto c = bwt[i];
 					if( i == last[c] && (penultimate[c] < lb || penultimate[c]==UNDEF )   ){
-						if(REPORT_ALL)	cout << sa[i] <<'\t' << cur.lcp << '\n';
-						else		nf++;
+						if(REPORT_ALL) cout << sa[i] <<'\t' << cur.lcp << '\n';
+						else nf++;
 					}
 				}
-				if(!REPORT_ALL && nf)		cout << sa[lb] << '\t'<< cur.lcp << '\t'<< nf << '\n';
+				if(!REPORT_ALL && nf) cout << sa[lb] << '\t'<< cur.lcp << '\t'<< nf << '\n';
 			}
 			list.resize(cur.list_start);
 			stack.pop();
@@ -64,10 +66,16 @@ void run(const vector<lcp_t>& lcp, const vector<uint8_t>& bwt, vector<ix_t> & sa
 
 		//PUSH INTERVAL
 		if(lcp[k] > stack.top().lcp){
-			stack.emplace(lcp[k], lb, list.size());
-			if(!dealt_with)
-				list.emplace_back(k - 1); // stack.top().list.push_back(k-1);
+			stack.emplace(lcp[k], lb, list.size() - !dealt_with);
 		}
 	}
 }
+template <typename lcp_t = int32_t, typename ix_t = uint32_t>
+void run(const vector<lcp_t>& lcp, const vector<uint8_t>& bwt, vector<ix_t> & sa){
+	if (REPORT_ALL)
+		_run<true, lcp_t, ix_t>(lcp, bwt, sa);
+	else
+		_run<false, lcp_t, ix_t>(lcp, bwt, sa);
+}
+
 }

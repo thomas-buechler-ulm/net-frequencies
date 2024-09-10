@@ -34,9 +34,9 @@ This command runs our algorithm for the example string "mississippi".
 FILE = input file
 OPTION
 	-a	Program outputs all string-positions with nf > 0
-Default: Program outputs one string postions and nf, for each string with nf > 0
+Default: Program outputs one string positions and nf, for each string with nf > 0
 ```
-The program writes running times to **stdcerr** and the output to **stdout**. If you like to store the output in a file (**out_file**) use:
+The program writes running times to **stderr** and the output to **stdout**. If you like to store the output in a file (**out_file**) use:
 ```
 ./nf.x FILE [OPTION] > out_file
 ```
@@ -53,7 +53,7 @@ Replace the following three files, with the ones stored in this repository: net-
 
 After replacing the files, rerun **cmake --build .** 
 
-Edit the file **net-frequencies/PATHS** and set the correct path to the **main.bin** of Peakergzf/string-net-frequency (from Guo et al. https://arxiv.org/html/2404.12701v1)
+Edit the file **net-frequencies/PATHS** to set the correct path to the **main.bin** of Peakergzf/string-net-frequency (from Guo et al. https://arxiv.org/html/2404.12701v1)
 
 
 ### Download test data:
@@ -68,7 +68,7 @@ To run the comparison of the output use:
 make run_compare_dna_nf
 ```
 The outputs will be stored in directory ./out
-The **diff** command should output nothing, as the outputs of both programs are euqal. 
+The **diff** command should output nothing, as the outputs of both programs are equal. 
 
 
 To run the time and space measurement use:

@@ -1,5 +1,9 @@
 # NET-FREQUENCIES 
+
 This program that calculates string net-frequencies.
+
+The software is part of the article *Faster Computation of Chinese Frequent Strings and Their Net Frequencies* by Enno Ohlebusch, Thomas Büchler and Jannik Olbrich. (Published in Springer, String Processing and Information Retrieval: https://doi.org/10.1007/978-3-031-72200-4_19)
+
 
 # Requirements
 - C++ compiler
